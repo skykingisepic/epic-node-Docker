@@ -1,0 +1,7 @@
+#!/bin/bash
+
+killall -3 epic-node
+sleep 8
+/root/epic-node
+exit
+
