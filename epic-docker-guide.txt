@@ -1,14 +1,13 @@
 ## Docker start
 # Manual Container creation process. If tar downloaded, skip to docker load line
 # You can also put epic binary in same folder (that files unzipped into) named epic-node and run Make
-# Prebuilt image file at https://nextcloud.epicempower.com/s/KDToJP24CnEYXEW
 
-:$ sudo docker pull ubuntu
-:$ sudo docker run -it --name epic-dock ubuntu bash
+:$ sudo docker pull ubuntu:20.04
+:$ sudo docker run -it --name epic-dock ubuntu:20.04 bash
 
 /# <- *inside running container*
 /# apt update 
-/# apt -y install wget unzip nano (and ncurses if running TUI)
+/# apt -y install libncurses5 libncursesw5 zlib1g screen locales nano
 /# mkdir /epic
 
 (:$ ) <- run these from another terminal with container running
@@ -27,7 +26,7 @@
 
 :$ sudo docker load < epic-docker.tar (if downloaded tar file and not created with commit)
 
-* Image epic-node ready to run as container with entrypoint (first run downloads bootstrap)
+* Image epic-node ready to run as container with entrypoint
 :$ sudo docker run --name epic-node -d epic-node
 
 * Check node running
@@ -35,6 +34,9 @@
 
 * Interact with running container
 :$ sudo docker exec -it epic-node bash
+root@epic-node:/# screen -r server-node (attach to screen running EPIC node)
+<ctrl>A then D to detach from screen and back to root@epic-node:
+root@epic-node:/# exit (to leave Docker)
 /# exit
 
 * Stop/Start Container

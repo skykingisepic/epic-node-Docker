@@ -26,12 +26,11 @@ db_root = "/root/.epic/main/chain_data"
 #tls_certificate_key = ""
 
 #the address on which services will listen, e.g. Transaction Pool
-#api_http_addr = "127.0.0.1:3413"
 api_http_addr = "0.0.0.0:3413"
 
 #path of the secret token used by the API to authenticate the calls
 #comment the it to disable basic auth
-api_secret_path = ".api_secret"
+#api_secret_path = "/home/pi/.epic/main/.api_secret"
 #foreign_api_secret_path = ".foreign_api_secret"
 
 #path to the file that contains the pre-generated foundation coinbases
@@ -60,11 +59,19 @@ skip_sync_wait = false
 #Timeout (in seconds) without the verification of the existence of more headers to be synced.
 #If no valid value is given to this variable (e.g negative values, zero),
 #the default value of 10 (seconds) is used.
-header_sync_timeout = 20
+header_sync_timeout = 10
 
 #whether to run the ncurses TUI. Ncurses must be installed and this
 #will also disable logging to stdout
-run_tui = false
+run_tui = true
+
+#Whether or not to set PolicyConfig to only use PoWType::RandomX.
+#Required for use of Floonet, has no effect on Mainnet
+only_randomx = false
+
+#Whether or not to set PolicyConfig to disable PoWType::ProgPow
+#For use on Floonet or Usernet. Has no effect on Mainnet
+no_progpow = false
 
 #Whether to run a test miner. This is only for developer testing (chaintype
 #usertesting) at cuckoo 16, and will only mine into the default wallet port.
@@ -73,6 +80,9 @@ run_test_miner = false
 
 #test miner wallet URL (burns if this doesn't exist)
 #test_miner_wallet_url = "http://127.0.0.1:3415"
+
+skip_pow_validation = true
+disable_checkpoints = true
 
 #########################################
 ### SERVER P2P CONFIGURATION          ###
@@ -89,14 +99,11 @@ host = "0.0.0.0"
 port = 3414
 
 #how to seed this server, can be None, List or DNSSeed
-#seeding_type = "DNSSeed"
 seeding_type = "List"
-seeds = ["3.218.126.145:3414"]
-
 
 #If the seeding type is List, the list of peers to connect to can
 #be specified as follows:
-#seeds = ["192.168.0.1:3414","192.168.0.2:3414"]
+seeds = ["95.217.197.180:3517","5.161.127.56:3414","5.75.242.4:3414","5.78.71.29:3414"]
 
 #hardcoded peer lists for allow/deny
 #will *only* connect to peers in allow list
@@ -109,21 +116,24 @@ seeds = ["3.218.126.145:3414"]
 #how long a banned peer should stay banned
 #ban_window = 10800
 
-#maximum number of peers
-#peer_max_count = 125
+#maximum number of inbound peers (default = 128)
+peer_max_inbound_count = 20
+
+#maximum number of outbound peers (default = 128)
+peer_max_outbound_count = 20
 
 #preferred minimum number of peers (we'll actively keep trying to add peers
 #until we get to at least this number
 #peer_min_preferred_count = 8
 
-# 15 = Bit flags for FULL_NODE
+# 31 = Bit flags for FULL_NODE, with HEADER_FASTSYNC capability
 #This structure needs to be changed internally, to make it more configurable
 
 # A preferred dandelion_peer, mainly used for testing dandelion
 # dandelion_peer = "10.0.0.1:13144"
 
 [server.p2p_config.capabilities]
-bits = 15
+bits = 31
 
 
 #########################################
@@ -201,16 +211,16 @@ timeout = 10
 log_to_stdout = true
 
 #log level for stdout: Error, Warning, Info, Debug, Trace
-stdout_log_level = "Debug"
+stdout_log_level = "Warn"
 
 #whether to log to a file
 log_to_file = true
 
 #log level for file: Error, Warning, Info, Debug, Trace
-file_log_level = "Warning"
+file_log_level = "Error"
 
 #log file path
-log_file_path = "/root/.epic/main/server.log"
+log_file_path = "/root/.epic/main/epic-server.log"
 
 #whether to append to the log file (true), or replace it on every run (false)
 log_file_append = true
@@ -221,3 +231,4 @@ log_max_size = 16777216
 
 #maximum count of the log files to rotate over
 log_max_files = 32
+
