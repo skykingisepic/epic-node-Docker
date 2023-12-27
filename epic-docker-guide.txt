@@ -47,4 +47,3 @@ root@epic-node:/# exit (to leave Docker)
 :$ crontab -e {5 1 */2 * * sudo docker stop epic-node && sleep 15 && sudo docker start epic-node}
 
 ## Docker end
-
