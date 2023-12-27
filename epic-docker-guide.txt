@@ -19,10 +19,10 @@
 /# chmod +x /root/entrypoint.sh 
 /# chmod +x /root/epic-node
 
-(:$ sudo docker commit --change='ENTRYPOINT ["/root/entrypoint.sh"]' epic-dock epic-node
+(:$ sudo docker commit --change='ENTRYPOINT ["/root/entrypoint.sh"]' epic-dock epic-node)
 (:$ sudo docker save -o epic-docker.tar epic-node)
 (:$ sudo docker stop epic-dock)
-(:$ sudo docker rm epic-dock) *remove build container (no entrypoint)*
+(:$ sudo docker rm epic-dock) <-remove build container (no entrypoint)
 
 :$ sudo docker load < epic-docker.tar (if downloaded tar file and not created with commit)
 
@@ -37,7 +37,7 @@
 root@epic-node:/# screen -r server-node (attach to screen running EPIC node)
 <ctrl>A then D to detach from screen and back to root@epic-node:
 root@epic-node:/# exit (to leave Docker)
-/# exit
+:$
 
 * Stop/Start Container
 :$ sudo docker stop epic-node
