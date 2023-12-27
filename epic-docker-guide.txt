@@ -34,9 +34,9 @@
 
 * Interact with running container
 :$ sudo docker exec -it epic-node bash
-root@epic-node:/# screen -r server-node (attach to screen running EPIC node)
-<ctrl>A then D to detach from screen and back to root@epic-node:
-root@epic-node:/# exit (to leave Docker)
+epicnode@epic-node-ID:/# screen -r server-node (attach to screen running EPIC node)
+<ctrl>A then D to detach from screen and back to epicnode@epic-node-ID:
+epicnode@epic-node-ID:/# exit (to leave Docker)
 :$
 
 * Stop/Start Container
