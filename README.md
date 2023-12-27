@@ -1,6 +1,6 @@
-## Docker start
-# Manual Container creation process. If tar downloaded, skip to docker load line
-# You can also put epic binary in same folder (that files unzipped into) named epic-node and run Make
+## Docker File Creation and execution
+### Manual Container creation process. If tar downloaded, skip to docker load line
+### You can also put epic binary in same folder (that files unzipped into) named epic-node and run Make
 
 :$ sudo docker pull ubuntu:20.04
 :$ sudo docker run -it --name epic-dock ubuntu:20.04 bash
@@ -46,5 +46,4 @@ root@epic-node:/# exit (to leave Docker)
 * Create crontab to restart every other day (add to end of crontab file w/o {} <ctrl>X-Y to save)
 :$ crontab -e {5 1 */2 * * sudo docker stop epic-node && sleep 15 && sudo docker start epic-node}
 
-## Docker end
 
