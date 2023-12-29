@@ -4,7 +4,7 @@
 # You can also put epic binary (named epic-node) in same folder cloned from Repo and run Make
 
 $ docker pull ubuntu:20.04
-$ docker run -it --name epic-dock ubuntu:20.04 bash
+$ docker run -it --name epic-dock ubuntu:20.04 bash (create temp build container)
 
 :/$ <- *inside running container*
 :/$ apt update 
@@ -14,7 +14,7 @@ $ docker run -it --name epic-dock ubuntu:20.04 bash
 :/$ sudo locale-gen en_US.UTF-8
 :/$ mkdir -p /home/epicnode/.epic/main
 
-$ <- run these from another terminal with container running and in Repo cloned folder
+$ <- run these from another terminal with temp container running and in Repo cloned folder
 $ docker cp foundation.json epic-dock:/home/epicnode/.epic/main/foundation.json
 $ docker cp epic-server.toml epic-dock:/home/epicnode/.epic/main/epic-server.toml
 $ docker cp entrypoint.sh epic-dock:/home/epicnode/entrypoint.sh
@@ -26,19 +26,20 @@ $ docker cp epic-node epic-dock:/home/epicnode/epic-node
 :~$ chmod +x entrypoint.sh 
 :~$ chmod +x epic-node
 
-$ <- run these from another terminal with container running and in Repo cloned folder
+$ <- run these from another terminal with temp container running and in Repo cloned folder
 $ docker commit --change='ENTRYPOINT ["/home/epicnode/entrypoint.sh"]' epic-dock epic-node
 $ docker save -o epic-docker.tar epic-node
 $ docker stop epic-dock
-$ docker rm epic-dock <-remove build container (no entrypoint)
+$ docker rm epic-dock (remove temp build container)
 
 # Docker File Execution and Interaction
 
-$ docker load < epic-docker.tar (downloaded from Repo or created with commit/save)
+* Create epic-node Image
+$ docker load < epic-docker.tar (downloaded from Repo, created with commit/save, or created with make)
 
-* Image epic-node ready to run as container
+* Image epic-node ready to run as container epic-node
 
-* Run if built with Make and Dockerfile (USER and ENV already set)
+* Run if built with make and Dockerfile (USER and ENV already set)
 $ docker run --restart always --name epic-node -h 'epic-node' -d epic-node
 
 * Run if built manually with commit/save (needs USER and ENV 'LANG' set in cmd line)
