@@ -1,20 +1,21 @@
 ## Docker .tar File Creation (no Dockerfile)
 
-# Manual Container creation process (If tar downloaded from Repo, skip to docker load line)
-# You can also put epic binary (named epic-node) in same folder cloned from Repo and run Make
+# Manual Image creation process
+# Note: You can also put epic binary (named epic-node) in same folder cloned from Repo and run make
+# Note: If tar downloaded from Repo or created with make, skip to docker run line
 
 $ docker pull ubuntu:20.04
 $ docker run -it --name epic-dock ubuntu:20.04 bash (create temp build container)
 
 :/$ <- *inside running container*
-:/$ apt update 
+:/$ apt update
 :/$ apt -y install sudo openssl libncurses5 libncursesw5 libncursesw6 zlib1g screen locales nano
 :/$ useradd -u 1000 -G sudo -U -m -s /bin/bash epicnode
 :/$ echo "epicnode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-:/$ sudo locale-gen en_US.UTF-8
+:/$ locale-gen en_US.UTF-8
 :/$ mkdir -p /home/epicnode/.epic/main
 
-$ <- run these from another terminal with temp container running and in Repo cloned folder
+$ <- run these from another terminal with container running and in Repo cloned folder
 $ docker cp foundation.json epic-dock:/home/epicnode/.epic/main/foundation.json
 $ docker cp epic-server.toml epic-dock:/home/epicnode/.epic/main/epic-server.toml
 $ docker cp entrypoint.sh epic-dock:/home/epicnode/entrypoint.sh
@@ -26,24 +27,24 @@ $ docker cp epic-node epic-dock:/home/epicnode/epic-node
 :~$ chmod +x entrypoint.sh 
 :~$ chmod +x epic-node
 
-$ <- run these from another terminal with temp container running and in Repo cloned folder
-$ docker commit --change='ENTRYPOINT ["/home/epicnode/entrypoint.sh"]' epic-dock epic-node
-$ docker save -o epic-docker.tar epic-node
+$ <- run these from another terminal with container running and in Repo cloned folder
+$ docker commit --change='ENTRYPOINT ["/home/epicnode/entrypoint.sh"]' \
+--change "ENV LANG=en_US.UTF-8" --change "USER epicnode" epic-dock epic-node (create image)
+$ docker save -o epic-docker.tar epic-node (create .tar backup from image)
 $ docker stop epic-dock
 $ docker rm epic-dock (remove temp build container)
 
 # Docker File Execution and Interaction
 
-* Create epic-node Image
-$ docker load < epic-docker.tar (downloaded from Repo, created with commit/save, or created with make)
+# Note: Create epic-node Image from .tar (if downloaded from Repo Release or created with make)
+# Note: Image epic-node already exists if created with commit/save, skip to docker run
+
+$ docker load < epic-docker.tar
 
 * Image epic-node ready to run as container epic-node
 
-* Run if built with make and Dockerfile (USER and ENV already set)
+* Create and run Container from Image
 $ docker run --restart always --name epic-node -h 'epic-node' -d epic-node
-
-* Run if built manually with commit/save (needs USER and ENV 'LANG' set in cmd line)
-$ docker run --restart always --name epic-node -h 'epic-node' --user epicnode:epicnode -d -e LANG='en_US.UTF-8' epic-node 
 
 * Check node running
 $ docker logs -f epic-node (<ctrl>C to exit)
@@ -60,5 +61,4 @@ $ docker stop epic-node
 $ docker start epic-node
 
 * Edit crontab (crontab -e) to restart every other day (add to end of crontab file <ctrl>X-Y to save)
-  5 1 */2 * * sudo docker stop epic-node && sleep 15 && sudo docker start epic-node
-
+  5 1 */2 * * docker stop epic-node && sleep 20 && docker start epic-node
